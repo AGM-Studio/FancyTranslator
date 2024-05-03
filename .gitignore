@@ -1,2 +1,6 @@
 .idea
 *test*
+
+dist
+*egg-info
+upload.ipynb

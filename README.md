@@ -1,4 +1,4 @@
-# EasySQL
+# Fancy Translator
 ![Downloads](https://pepy.tech/badge/pyfancytranslator)
 ![Downloads](https://pepy.tech/badge/pyfancytranslator/week)
 ![Downloads](https://pepy.tech/badge/pyfancytranslator/month)  
