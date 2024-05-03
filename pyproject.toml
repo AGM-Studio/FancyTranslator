@@ -3,12 +3,12 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pyfancytelegram"
-version = "0.1.0"
+name = "pyfancytranslator"
+version = "1.0.0"
 authors = [
     { name = "Ashenguard", email = "ashenguard@agmstudio.xyz" },
 ]
-description = "SQL Database management without even a SQL line"
+description = "A well built translator with placeholders"
 readme = "README.md"
 requires-python = ">=3.12"
 classifiers = [
@@ -17,10 +17,8 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Operating System :: OS Independent",
 ]
-dependencies = [
-    "python-telegram-bot", "pyfancylogger"
-]
+dependencies = []
 
 [project.urls]
-"Homepage" = "https://github.com/agm-studio/easysql"
-"Bug Tracker" = "https://github.com/agm-studio/easysql/issues"
+"Homepage" = "https://github.com/agm-studio/fancytranslator"
+"Bug Tracker" = "https://github.com/agm-studio/fancytranslator/issues"
