@@ -1,6 +1,6 @@
-from classes import Translator, Language
+from .classes import Translator, Language
 
-__version__ = '1.0.0'
+__version__ = '1.0.2'
 __author__ = 'Ashenguard'
 __email__ = 'ashenguard@agmstudio.xyz'
 

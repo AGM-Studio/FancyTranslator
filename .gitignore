@@ -2,5 +2,6 @@
 *test*
 
 dist
+build
 *egg-info
 upload.ipynb
