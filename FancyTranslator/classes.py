@@ -118,7 +118,7 @@ class Language:
         return text
 
 
-_TL = TypeVar('_TL', bind=Language)
+_TL = TypeVar('_TL', bound=Language)
 
 
 class Translator:
