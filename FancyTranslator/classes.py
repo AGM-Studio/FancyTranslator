@@ -32,11 +32,11 @@ class Language:
         :param logger (logging.Logger): The child logger of translator logger for this language
     """
 
-    def __init__(self, translator: 'Translator', code: str):
+    def __init__(self, translator: 'Translator', code: str, encoding="utf-8"):
         self.code = code
 
         cf = ConfigParser()
-        cf.read(f"{translator.path}/{code}.ini")
+        cf.read(f"{translator.path}/{code}.ini", encoding=encoding)
 
         count = 0
         self.parser = Parser()
