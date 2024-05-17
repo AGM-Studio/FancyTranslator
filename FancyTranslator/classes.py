@@ -113,7 +113,7 @@ class Language:
                 else:
                     obj = getattr(obj, path.pop(0), None)
 
-            text.replace(f'%{placeholder}%', str(obj) if obj is not None else f'None({placeholder})')
+            text = text.replace(f'%{placeholder}%', str(obj) if obj is not None else f'None({placeholder})')
 
         return text
 
