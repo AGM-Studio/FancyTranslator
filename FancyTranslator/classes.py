@@ -104,8 +104,8 @@ class Language:
         if not isinstance(text, str):
             return text
 
-        for placeholder in re.findall('%\\w+(\\.\\w+)*%', text):
-            path = placeholder.split('.')
+        for placeholder in re.findall('%(\\w+(\\.\\w+)*)%', text):
+            path = placeholder[0].split('.')
             obj: None | object = kwargs.get(path.pop(0), None)
             while obj is not None and len(path) > 0:
                 if isinstance(obj, dict):
