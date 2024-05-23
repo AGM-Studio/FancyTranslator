@@ -22,7 +22,7 @@ class Parser:
         return self.data.get(section, {}).get(option, None)
 
 
-class Language:
+class Translation:
     """
     Class which handles the translation for a language.
     Parameters:
@@ -118,7 +118,7 @@ class Language:
         return text
 
 
-_TL = TypeVar('_TL', bound=Language)
+_TL = TypeVar('_TL', bound=Translation)
 
 
 class Translator:
@@ -131,8 +131,8 @@ class Translator:
 
     """
     def __init__(self, path: str = None, *, language_class: Type[_TL] = None, logger: Union[logging.Logger, str] = None):
-        language_class = language_class or Language
-        if not issubclass(language_class, Language):
+        language_class = language_class or Translation
+        if not issubclass(language_class, Translation):
             raise TypeError('"language_class" must be a subclass of Language')
 
         self.path = path or './'
