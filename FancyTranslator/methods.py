@@ -7,8 +7,8 @@ if TYPE_CHECKING:
 
 __parentheses = re.compile(r'(\([^()]*\))')
 __quotes = re.compile(r'(([\'"]).*?\2)')
-__functions = re.compile(r'^([A-Za-z0-9_]+)\(([A-Za-z0-9_.,]*)\)$')
-__slices = re.compile(r'^([A-Za-z0-9_]+)\[(\d*)(:?)(\d*):?(\d*)]$')
+__functions = re.compile(r'^([A-Za-z0-9_]*)\(([A-Za-z0-9_.,]*)\)$')
+__slices = re.compile(r'^([A-Za-z0-9_]*)\[(\d*)(:?)(\d*):?(\d*)]$')
 
 
 def _find(text, regex, holder):
@@ -22,7 +22,7 @@ def _find(text, regex, holder):
 
 
 def _replace(text, holder, matches):
-    pattern = re.compile(f'{holder}(\d+){holder}')
+    pattern = re.compile(f'{holder}(\\d+){holder}')
     while indexes := re.findall(pattern, text):
         for index in indexes:
             text = text.replace(f"{holder}{index}{holder}", matches[int(index)], 1)
@@ -35,21 +35,24 @@ def split_placeholder(text: str) -> List[str]:
     text, p_matches = _find(text, __parentheses, '%')
     split = text.split('.')
     for i in range(len(split)):
-        text = _replace(text, '%', p_matches)
+        split[i] = _replace(split[i], '%', p_matches)
     for i in range(len(split)):
-        text = _replace(text, '$', q_matches)
+        split[i] = _replace(split[i], '$', q_matches)
 
     return split
 
 
 def split_args(text: str) -> List[str]:
+    if text == '':
+        return []
+
     text, q_matches = _find(text, __quotes, '$')
     text, p_matches = _find(text, __parentheses, '%')
     split = text.split(',')
     for i in range(len(split)):
-        text = _replace(text, '%', p_matches)
+        split[i] = _replace(split[i], '%', p_matches)
     for i in range(len(split)):
-        text = _replace(text, '$', q_matches)
+        split[i] = _replace(split[i], '$', q_matches)
 
     return split
 
@@ -64,7 +67,7 @@ def handle_placeholder(placeholder: str, translation: "Translation", objects: Di
         # Handle callables
         if match := re.match(__functions, current):
             current = match.group(1)
-            obj = getattr(obj, current, None)
+            obj = get_from(current, obj)
             if isinstance(obj, Callable):
                 args = split_args(match.group(2))
                 for i in range(len(args)):
@@ -78,7 +81,7 @@ def handle_placeholder(placeholder: str, translation: "Translation", objects: Di
         # Handle slicing
         elif match := re.match(__slices, current):
             current = match.group(1)
-            obj = getattr(obj, current, None)
+            obj = get_from(current, obj)
             if isinstance(obj, list):
                 si = match.group(2)
                 si = int(si) if si else None
@@ -93,9 +96,15 @@ def handle_placeholder(placeholder: str, translation: "Translation", objects: Di
 
         # Handle membership
         else:
-            if isinstance(obj, dict):
-                obj = obj.get(current, None)
-            else:
-                obj = getattr(obj, current, None)
+            obj = get_from(current, obj)
 
     return str(obj)
+
+
+def get_from(current, obj):
+    if current is None or current == '':
+        return obj
+    if isinstance(obj, dict):
+        return obj.get(current, None)
+    else:
+        return getattr(obj, current, None)

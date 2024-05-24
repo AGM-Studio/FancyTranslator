@@ -4,6 +4,8 @@ import re
 from configparser import ConfigParser
 from typing import Optional, Type, TypeVar, Union
 
+from FancyTranslator.methods import handle_placeholder
+
 
 class Parser:
     """
@@ -104,15 +106,8 @@ class Translation:
         if not isinstance(text, str):
             return text
 
-        for placeholder in re.findall('%(\\w+(\\.\\w+)*)%', text):
-            path = placeholder[0].split('.')
-            obj: None | object = kwargs.get(path.pop(0), None)
-            while obj is not None and len(path) > 0:
-                if isinstance(obj, dict):
-                    obj = obj.get(path.pop(0), None)
-                else:
-                    obj = getattr(obj, path.pop(0), None)
-
+        for placeholder in re.findall('%(.*)%', text):
+            obj = handle_placeholder(placeholder, self, kwargs)
             text = text.replace(f'%{placeholder}%', str(obj) if obj is not None else f'None({placeholder})')
 
         return text
