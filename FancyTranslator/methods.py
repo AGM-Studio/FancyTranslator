@@ -57,7 +57,29 @@ def split_args(text: str) -> List[str]:
     return split
 
 
-def handle_placeholder(placeholder: str, translation: "Translation", objects: Dict[str, Any]) -> str:
+def handle_placeholder(placeholder: str, translation: "Translation", objects: Dict[str, Any]) -> Any:
+    # Possible None!
+    if placeholder is None or placeholder == '' or placeholder.lower() == 'none' or placeholder.lower() == 'null':
+        return None
+
+    # If bool, return bool
+    if placeholder.lower() == "true":
+        return True
+    if placeholder.lower() == "false":
+        return False
+
+    # If string, return string
+    if match := re.match("^(['\"])(.*?)\1$", placeholder):
+        return match.group(2)
+
+    # If int, return int
+    if match := re.match("^\\d+$", placeholder):
+        return int(match.group(1))
+
+    # If float, return float
+    if match := re.match("^(-?(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:e-?\\d+)?)$", placeholder):
+        return float(match.group(1))
+
     path = split_placeholder(placeholder)
 
     obj: None | object = {"translation": translation, **objects}
